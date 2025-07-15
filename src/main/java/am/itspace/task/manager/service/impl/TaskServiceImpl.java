@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -57,6 +58,10 @@ public class TaskServiceImpl implements TaskService {
     Page<Task> taskPage = this.taskRepository.findAll(pageable);
 
     Function<Task, TaskResponse> taskTaskResponseFunction = task -> TaskMapper.toTaskResponse(task);
+
+//    List<TaskResponse> tasks = taskPage.stream()
+//        .map(t -> TaskMapper.toTaskResponse(t))
+//        .toList();
 
     return PageMapper.toPageWrapper(taskPage, taskTaskResponseFunction);
   }
@@ -96,6 +101,9 @@ public class TaskServiceImpl implements TaskService {
   public void deleteTaskById(Long id) {
     this.taskRepository.findById(id)
         .ifPresentOrElse(task -> taskRepository.delete(task),
-            () -> new TaskNotFoundException("Task not found"));
+            () -> {
+              log.error("Task with id {} is not found", id);
+              throw new TaskNotFoundException("Task with " + id + " not found");
+            });
   }
 }
