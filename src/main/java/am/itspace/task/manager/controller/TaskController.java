@@ -7,7 +7,6 @@ import am.itspace.task.manager.dto.TaskResponse;
 import am.itspace.task.manager.dto.UpdateTaskRequest;
 import am.itspace.task.manager.dto.UpdatedTaskResponse;
 import am.itspace.task.manager.service.TaskService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
