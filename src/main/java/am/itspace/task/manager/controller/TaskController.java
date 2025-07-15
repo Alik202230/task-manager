@@ -7,6 +7,9 @@ import am.itspace.task.manager.dto.TaskResponse;
 import am.itspace.task.manager.dto.UpdateTaskRequest;
 import am.itspace.task.manager.dto.UpdatedTaskResponse;
 import am.itspace.task.manager.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,9 @@ public class TaskController {
   private final TaskService taskService;
 
   @PostMapping("/create")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Task created successfully")
+  })
   public ResponseEntity<CreateTaskResponse> create(@RequestBody @Valid CreateTaskRequest request) {
     CreateTaskResponse response = this.taskService.create(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -45,17 +51,30 @@ public class TaskController {
   }
 
   @GetMapping("/{id}")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "404", description = "Task with given id is not found"),
+      @ApiResponse(responseCode = "200", description = "Task found with given id")
+  })
   public ResponseEntity<Optional<TaskResponse>> getTaskById(@PathVariable Long id) {
     Optional<TaskResponse> taskResponse = taskService.getTaskById(id);
     return ResponseEntity.status(HttpStatus.OK).body(taskResponse);
   }
 
+
   @PutMapping("/{id}")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Task updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Task not found")
+  })
   public ResponseEntity<UpdatedTaskResponse> updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest request) {
     UpdatedTaskResponse updatedTask = taskService.updateTask(request, id);
     return ResponseEntity.ok(updatedTask);
   }
 
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "404", description = "Task with given id is not found"),
+      @ApiResponse(responseCode = "204", description = "Task deleted successfully")
+  })
   @DeleteMapping("/{id}")
   public ResponseEntity<String> delete(@PathVariable Long id) {
     this.taskService.deleteTaskById(id);
