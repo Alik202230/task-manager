@@ -12,20 +12,21 @@
 	<artifactId>Task-Manager-API</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Task-Manager-API</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Demo project for Spring Boot</description> <!-- with gpt ?? -->
+	<!-- The following section is not needed and uses incorrect XML style. -->
 	<url/>
-	<licenses>
+	<licenses><!-- delete -->
 		<license/>
 	</licenses>
-	<developers>
+	<developers><!-- delete -->
 		<developer/>
 	</developers>
-	<scm>
-		<connection/>
+	<scm> <!-- delete -->
+		<connection/><!-- delete -->
 		<developerConnection/>
 		<tag/>
 		<url/>
-	</scm>
+	</scm><!-- delete -->
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -56,6 +57,7 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- duplicate dependency -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
