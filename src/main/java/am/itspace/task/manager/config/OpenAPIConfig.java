@@ -12,22 +12,26 @@ import java.util.List;
 @Configuration
 public class OpenAPIConfig {
 
+
+  private static final String API_URL = System.getenv("API_URL");
+
+
   @Bean
   public OpenAPI openAPI() {
     Server server = new Server();
-    server.setUrl("http://localhost:8080");
+    server.setUrl(API_URL);
     server.setDescription("OpenAPI Documentation");
 
     Contact contact = new Contact();
     contact.setName("Task Manager API");
     contact.setName("something@gmai.com");
 
-    Info  info = new Info()
+    Info info = new Info()
         .title("Task Manager API")
         .version("1.0")
         .contact(contact);
 
-    return new  OpenAPI()
+    return new OpenAPI()
         .info(info)
         .servers(List.of(server));
   }

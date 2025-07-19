@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,12 +41,18 @@ public class TaskController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
-  @GetMapping
-  public ResponseEntity<PageResponse<TaskResponse>> getAllTasks(
+  @GetMapping("/page")
+  public ResponseEntity<PageResponse<TaskResponse>> getTaskWithPage(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size) {
-    PageResponse<TaskResponse> tasks = taskService.getAllTasks(page, size);
+    PageResponse<TaskResponse> tasks = taskService.getAllTaskWithPage(page, size);
     return ResponseEntity.ok(tasks);
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<List<TaskResponse>> getAllTasks() {
+    List<TaskResponse> tasks = this.taskService.getAllTasks();
+    return ResponseEntity.status(HttpStatus.OK).body(tasks);
   }
 
   @GetMapping("/{id}")
@@ -54,8 +60,8 @@ public class TaskController {
       @ApiResponse(responseCode = "404", description = "Task with given id is not found"),
       @ApiResponse(responseCode = "200", description = "Task found with given id")
   })
-  public ResponseEntity<Optional<TaskResponse>> getTaskById(@PathVariable Long id) {
-    Optional<TaskResponse> taskResponse = taskService.getTaskById(id);
+  public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
+    TaskResponse taskResponse = taskService.getTaskById(id);
     return ResponseEntity.status(HttpStatus.OK).body(taskResponse);
   }
 

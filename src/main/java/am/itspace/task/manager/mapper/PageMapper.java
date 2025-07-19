@@ -1,6 +1,8 @@
 package am.itspace.task.manager.mapper;
 
 import am.itspace.task.manager.dto.PageResponse;
+import am.itspace.task.manager.dto.TaskResponse;
+import am.itspace.task.manager.entity.Task;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -10,12 +12,12 @@ public final class PageMapper {
 
   private PageMapper() {}
 
-  public static <T, R> PageResponse<R> toPageWrapper(Page<T> page, Function<T, R> converter) {
-    List<R> content = page.getContent().stream()
+  public static PageResponse<TaskResponse> toPageWrapper(Page<Task> page, Function<Task, TaskResponse> converter) {
+    List<TaskResponse> content = page.getContent().stream()
         .map(converter)
         .toList();
 
-    return PageResponse.<R>builder()
+    return PageResponse.<TaskResponse>builder()
         .content(content)
         .number(page.getNumber())
         .size(page.getSize())
