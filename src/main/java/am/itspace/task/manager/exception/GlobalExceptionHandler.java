@@ -14,7 +14,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();
@@ -23,6 +22,8 @@ public class GlobalExceptionHandler {
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
     });
+
+
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
   }
 
@@ -41,7 +42,8 @@ public class GlobalExceptionHandler {
         yield ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
       }
       default -> {
-        ErrorMessage error = new ErrorMessage("Server is about to down. Critical",
+        ErrorMessage error = new ErrorMessage(
+            "An unexpected error occurred. Please contact support.",
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             HttpStatus.INTERNAL_SERVER_ERROR,
             LocalDateTime.now()

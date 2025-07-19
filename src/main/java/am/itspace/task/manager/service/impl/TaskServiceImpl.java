@@ -13,6 +13,7 @@ import am.itspace.task.manager.mapper.TaskMapper;
 import am.itspace.task.manager.repository.TaskRepository;
 import am.itspace.task.manager.service.TaskService;
 import am.itspace.task.manager.utils.PageUtil;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -33,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
   @Override
   public CreateTaskResponse create(CreateTaskRequest request) {
 
-    log.info("Task creation is in progress");
+    log.debug("Task creation is in progress");
 
     Task task = Task.builder()
         .title(request.getTitle())
@@ -50,12 +52,10 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public PageResponse<TaskResponse> getAllTasks(int page, int size) {
+  public PageResponse<TaskResponse> getAllTaskWithPage(int page, int size) {
 
     Pageable pageable = PageUtil.createPage(page, size);
-
     Page<Task> taskPage = this.taskRepository.findAll(pageable);
-
     Function<Task, TaskResponse> taskResponseFunction = task -> TaskMapper.toTaskResponse(task);
 
     return PageMapper.toPageWrapper(taskPage, taskResponseFunction);
@@ -70,7 +70,7 @@ public class TaskServiceImpl implements TaskService {
       throw new TaskNotFoundException("Task with " + id + " is not presented");
     }
 
-    Task task = new Task();
+    Task task = optionalTask.get();
     task.setTitle(request.getTitle());
     task.setDescription(request.getDescription());
 
@@ -83,13 +83,24 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Optional<TaskResponse> getTaskById(Long id) {
-    return Optional.ofNullable(this.taskRepository.findById(id)
+  public List<TaskResponse> getAllTasks() {
+    List<Task> tasks = this.taskRepository.findAll();
+
+    if (tasks.isEmpty()) throw new TaskNotFoundException("Tasks not found");
+
+    return tasks.stream()
+        .map(task -> TaskMapper.toTaskResponse(task))
+        .toList();
+  }
+
+  @Override
+  public TaskResponse getTaskById(Long id) {
+    return this.taskRepository.findById(id)
         .map(task -> TaskMapper.toTaskResponse(task))
         .orElseThrow(() -> {
           log.error("task with id {} not found", id);
           return new TaskNotFoundException("Task with id " + id + " not found");
-        }));
+        });
   }
 
   @Override

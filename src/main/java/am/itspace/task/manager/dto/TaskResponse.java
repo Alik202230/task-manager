@@ -1,12 +1,11 @@
 package am.itspace.task.manager.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
+import lombok.Setter;
 
-@Data
-@Builder
+@Setter
+@Getter
 @NoArgsConstructor
 public class TaskResponse {
 
@@ -20,4 +19,40 @@ public class TaskResponse {
     this.isCompleted = isCompleted;
   }
 
+  public static TaskResponseBuilder builder() {
+    return new TaskResponseBuilder();
+  }
+
+
+  public static class TaskResponseBuilder {
+    private String title;
+    private String description;
+    private Boolean isCompleted;
+
+    TaskResponseBuilder() {
+    }
+
+    public TaskResponseBuilder title(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public TaskResponseBuilder description(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public TaskResponseBuilder isCompleted(Boolean isCompleted) {
+      this.isCompleted = isCompleted;
+      return this;
+    }
+
+    public TaskResponse build() {
+      return new TaskResponse(this.title, this.description, this.isCompleted);
+    }
+
+    public String toString() {
+      return "TaskResponse.TaskResponseBuilder(title=" + this.title + ", description=" + this.description + ", isCompleted=" + this.isCompleted + ")";
+    }
+  }
 }
